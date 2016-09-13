@@ -1,0 +1,9 @@
+h1 {
+    color: red;
+}
+
+img{
+      width: 739px;
+      height: 347px;
+      background-image: url("../img/demo.jpg");
+  }

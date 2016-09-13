@@ -2,8 +2,10 @@
 
 ## 快速开始
 - 安装依赖
-  + `npm  install`
+  + `npm install`
 - 开发环境
-  + `npm  run develop`
+  + `npm run develop`
 - 项目发布
-  + `npm  run publish`
+  + `npm run publish`
+- gulp和webpack集成
+  + `npm run deploy`
