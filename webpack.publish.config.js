@@ -56,6 +56,25 @@ module.exports = {
             }
         ]
     },
+    resolve: {
+        // 自动扩展文件后缀名
+        // extensions 第一个是空字符串! 对应不需要后缀的情况.
+        extensions: ['', '.js', '.json', '.scss', '.jsx'],
+        // 模块别名定义，方便后续直接引用别名，这样不用写长的路径名。比如直接 require('AppStore') 即可
+        alias: {
+            //AppStore: 'js/stores/AppStores.js',
+            //ActionType: 'js/actions/ActionType.js',
+            //AppAction: 'js/actions/AppAction.js'
+        }
+    },
+    // 在这个属性里面定义的包不会被打包进bundle。需要引入cdn
+    //externals: {
+    //    // 前边这个名称是在项目中引用用的，相当于import React from  ‘reacta’ 中的react，
+    //    //'reacta':"react",
+    //    'reacta':"react",
+    //    'react-doma':"react-dom",
+    //     '$1':"jQuery"
+    //},
     plugins:[
         //分离第三方应用插件，name属性会自动指向entry中vendros属性，filename属性中的文件会自动构建到output中的path属性下面
         new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
