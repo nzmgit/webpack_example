@@ -1,5 +1,6 @@
 var path = require('path');
-
+// 自动打开浏览器插件
+var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 module.exports = {
     // 选择一个入口文件
     entry: [
@@ -40,5 +41,8 @@ module.exports = {
                 loader: 'url?limit=25000&name=img/[name].[ext]'
             }
         ]
-    }
+    },
+    plugins: [
+        new OpenBrowserPlugin({url: 'http://localhost:8080/', browser: 'chrome'})
+    ]
 }

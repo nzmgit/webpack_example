@@ -1,5 +1,9 @@
 var path = require('path');
-var webpack = require('webpack')
+var webpack = require('webpack');
+// 提取css文件的插件
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
+// 自动生成index.html页面插件
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     // 选择一个入口文件
@@ -33,12 +37,15 @@ module.exports = {
             // 处理js中引用的css
             {
                 test: /\.css$/, // Only .css files
-                loader: 'style!css' //Run both loaders 两个加载器中间用！隔开，而且执行顺序是从右往左
+                loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+                //loader: 'style!css' //Run both loaders 两个加载器中间用！隔开，而且执行顺序是从右往左
             },
             // 处理sass文件
             {
                 test: /\.scss$/,
-                loader: 'style!css!sass'
+                // css-loader和sass.loader文件必须连在一起写才可以抽离sass文件
+                loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader")
+                //loader: 'style!css!sass'
             },
             // 处理图片的加载器
             {
@@ -50,7 +57,38 @@ module.exports = {
         ]
     },
     plugins:[
-        //分离第三方应用插件
-        new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'})
+        //分离第三方应用插件，name属性会自动指向entry中vendros属性，filename属性中的文件会自动构建到output中的path属性下面
+        new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
+        // 用webpack压缩代码，可以忽略代码中的警告
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
+        // 可以新建多个抽离样式的文件，这样可以有多个css文件，内联样式无法抽离。
+        new ExtractTextPlugin("style.css"),
+
+        new webpack.DefinePlugin({
+            //内置插件，去掉react中的警告，react会自己判断
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
+        //自动生成html页面插件
+        new HtmlWebpackPlugin({
+            template: './src/template.html',
+            htmlWebpackPlugin: {
+                "files": {
+                    "css": ["style.css"],
+                    "js": ["bundle.js", "vendors.js"]
+                }
+            },
+            // 去掉注释等代码
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeAttributeQuotes: true
+            }
+        })
     ]
 }
